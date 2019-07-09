@@ -136,7 +136,7 @@ router.post('/forgot', (req, res, next)=> {
             subject: 'Node.js Password Reset',
             text: 'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
               'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
-              'http://' + req.headers.host + '/reset/' + token + '\n\n' +
+              'http://' + req.headers.host + '/users/reset/' + token + '\n\n' +
               'If you did not request this, please ignore this email and your password will remain unchanged.\n'
           };
           smtpTransport.sendMail(mailOptions, function(err) {
@@ -166,8 +166,8 @@ router.post('/reset/:token', function (req, res) {
         function (done) {
             User.findOne({ resetPasswordToken: req.params.token, resetPasswordExpires: { $gt: Date.now() } }, function (err, user) {
                 if (!user) {
-                    req.flash('error_msg', 'Password reset token is invalid or has expired.');
-                    return res.redirect('back');
+                    req.flash('error_msg', 'Password reset token is invalid or has expired.')
+                    return res.redirect('back')
                 }
                 const { password, password2 } = req.body
                 let errors = []
@@ -178,11 +178,8 @@ router.post('/reset/:token', function (req, res) {
                     errors.push({msg: 'Password should be at least 6 caracters long'})
                 }
                 if(errors.length > 0){
-                    res.render('/reset/'+ req.params.token,{
-                        errors,
-                        password,
-                        password2
-                    })
+                    req.flash('error_msg', errors[0].msg)
+                    res.redirect('back')
                 } else {
                     user.resetPasswordToken = undefined;
                     user.resetPasswordExpires = undefined;
@@ -194,7 +191,7 @@ router.post('/reset/:token', function (req, res) {
                             user.password = hash
                             // Save User
                             user.save()
-                                .then()
+                                .then(()=> done(null, user))
                                 .catch(err => console.log(err))
                         }
                     ))
