@@ -9,6 +9,9 @@ const app = express();
 
 const PORT = process.env.PORT || 5000
 
+// dotenv config
+require('dotenv').config()
+
 // passport config
 require('./config/passport')(passport)
 
