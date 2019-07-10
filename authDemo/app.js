@@ -9,6 +9,9 @@ const app = express();
 
 const PORT = process.env.PORT || 5000
 
+// public folder setup
+app.use(express.static(__dirname + "/public"))
+
 // dotenv config
 require('dotenv').config()
 
@@ -22,6 +25,9 @@ const db = require('./config/keys').MongoURI
 mongoose.connect(db, {useNewUrlParser: true, dbName: 'authDemoDB'})
     .then(()=> console.log("Database Conntected!"))
     .catch((err)=> console.log(err))
+
+// reseting Database
+//require('./config/reset')()
 
 //EJS
 app.use(expressLayouts)
@@ -51,6 +57,9 @@ app.use((req, res, next)=>{
     res.locals.error = req.flash('error')
     next()
 })
+
+
+
 //Routes
 app.use('/', require('./routes/index'))
 app.use('/users', require('./routes/user'))
