@@ -1,0 +1,29 @@
+<% include partials/header.ejs %>
+<div class="container">
+    <form action="/search" method="GET">
+        <div class="form-group d-flex">
+            <input type="text" class="form-control" name="search" placeholder="Search">
+            <button class="btn btn-md btn-success float-right">Search</button>
+        </div>
+    </form>
+</div>
+<div class="container">
+    <a href="/product/new">Add product</a>
+</div>
+<div class="container">
+    <div class="row">
+        <% for(var i=0; i<products.length; i++) {%>
+           <div class="col-md">
+                <div class="card">
+                    <div class="card-body">
+                        <h4><%= products[i].name %></h4>
+                        <h6><%= products[i].category %></h6>
+                    </div>
+                </div>                
+           </div>
+          <% } %>
+    </div>
+</div>
+
+
+<% include partials/footer.ejs %>
